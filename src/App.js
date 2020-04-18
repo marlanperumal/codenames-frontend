@@ -31,7 +31,7 @@ const Card = styled.button`
     font-family: inherit;
     background-color: ${props =>
         props.reveal ? teamColors[props.team] : "#EEEEEE"};
-    color: ${props => props.reveal ? "white" : "auto"};
+    color: ${props => (props.reveal ? "white" : "auto")};
     border-style: solid;
     border-width: 4px;
     border-color: white;
@@ -42,8 +42,8 @@ const Card = styled.button`
     /* outline: 0; */
 
     &:hover {
-        border-color: ${props => props.disabled ? "white" : "greenyellow"};
-        cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+        border-color: ${props => (props.disabled ? "white" : "greenyellow")};
+        cursor: ${props => (props.disabled ? "not-allowed" : "pointer")};
     }
 `
 
