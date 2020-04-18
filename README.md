@@ -21,7 +21,7 @@ You must have these installed before running
 2. Run the mock db server
 
     ```bash
-    json-server --watch mockdb.json --port 5000 --routes routes.json
+    yarn db
     ```
 
 3. Run the app
