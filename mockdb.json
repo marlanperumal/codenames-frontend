@@ -1,179 +1,207 @@
 {
-  "cards": [
-    {
-      "id": 11,
-      "position": 0,
-      "word": "word 11",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 12,
-      "position": 1,
-      "word": "word 12",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 13,
-      "position": 2,
-      "word": "word 13",
-      "team": "neutral",
-      "selected": false
-    },
-    {
-      "id": 14,
-      "position": 3,
-      "word": "word 14",
-      "team": "death",
-      "selected": false
-    },
-    {
-      "id": 15,
-      "position": 4,
-      "word": "word 15",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 21,
-      "position": 5,
-      "word": "word 21",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 22,
-      "position": 6,
-      "word": "word 22",
-      "team": "neutral",
-      "selected": false
-    },
-    {
-      "id": 23,
-      "position": 7,
-      "word": "word 23",
-      "team": "neutral",
-      "selected": false
-    },
-    {
-      "id": 24,
-      "position": 8,
-      "word": "word 24",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 25,
-      "position": 9,
-      "word": "word 25",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 31,
-      "position": 10,
-      "word": "word 31",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 32,
-      "position": 11,
-      "word": "word 32",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 33,
-      "position": 12,
-      "word": "word 33",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 34,
-      "position": 13,
-      "word": "word 34",
-      "team": "neutral",
-      "selected": false
-    },
-    {
-      "id": 35,
-      "position": 14,
-      "word": "word 35",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 41,
-      "position": 15,
-      "word": "word 41",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 42,
-      "position": 16,
-      "word": "word 42",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 43,
-      "position": 17,
-      "word": "word 43",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 44,
-      "position": 18,
-      "word": "word 44",
-      "team": "neutral",
-      "selected": false
-    },
-    {
-      "id": 45,
-      "position": 19,
-      "word": "word 45",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 51,
-      "position": 20,
-      "word": "word 51",
-      "team": "neutral",
-      "selected": false
-    },
-    {
-      "id": 52,
-      "position": 21,
-      "word": "word 52",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 53,
-      "position": 22,
-      "word": "word 53",
-      "team": "red",
-      "selected": false
-    },
-    {
-      "id": 54,
-      "position": 23,
-      "word": "word 54",
-      "team": "blue",
-      "selected": false
-    },
-    {
-      "id": 55,
-      "position": 24,
-      "word": "word 55",
-      "team": "neutral",
-      "selected": false
+  "games": {
+    "AFjkdi": {
+      "cards": [
+        {
+          "id": 11,
+          "position": 0,
+          "word": "word 11",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 12,
+          "position": 1,
+          "word": "word 12",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 13,
+          "position": 2,
+          "word": "word 13",
+          "team": "neutral",
+          "selected": false
+        },
+        {
+          "id": 14,
+          "position": 3,
+          "word": "word 14",
+          "team": "death",
+          "selected": false
+        },
+        {
+          "id": 15,
+          "position": 4,
+          "word": "word 15",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 21,
+          "position": 5,
+          "word": "word 21",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 22,
+          "position": 6,
+          "word": "word 22",
+          "team": "neutral",
+          "selected": false
+        },
+        {
+          "id": 23,
+          "position": 7,
+          "word": "word 23",
+          "team": "neutral",
+          "selected": false
+        },
+        {
+          "id": 24,
+          "position": 8,
+          "word": "word 24",
+          "team": "red",
+          "selected": true
+        },
+        {
+          "id": 25,
+          "position": 9,
+          "word": "word 25",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 31,
+          "position": 10,
+          "word": "word 31",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 32,
+          "position": 11,
+          "word": "word 32",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 33,
+          "position": 12,
+          "word": "word 33",
+          "team": "blue",
+          "selected": true
+        },
+        {
+          "id": 34,
+          "position": 13,
+          "word": "word 34",
+          "team": "neutral",
+          "selected": false
+        },
+        {
+          "id": 35,
+          "position": 14,
+          "word": "word 35",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 41,
+          "position": 15,
+          "word": "word 41",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 42,
+          "position": 16,
+          "word": "word 42",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 43,
+          "position": 17,
+          "word": "word 43",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 44,
+          "position": 18,
+          "word": "word 44",
+          "team": "neutral",
+          "selected": false
+        },
+        {
+          "id": 45,
+          "position": 19,
+          "word": "word 45",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 51,
+          "position": 20,
+          "word": "word 51",
+          "team": "neutral",
+          "selected": false
+        },
+        {
+          "id": 52,
+          "position": 21,
+          "word": "word 52",
+          "team": "blue",
+          "selected": false
+        },
+        {
+          "id": 53,
+          "position": 22,
+          "word": "word 53",
+          "team": "red",
+          "selected": false
+        },
+        {
+          "id": 54,
+          "position": 23,
+          "word": "word 54",
+          "team": "blue",
+          "selected": true
+        },
+        {
+          "id": 55,
+          "position": 24,
+          "word": "word 55",
+          "team": "neutral",
+          "selected": false
+        }
+      ],
+      "teams": {
+        "red": [
+          "John",
+          "Jeff"
+        ],
+        "redSpy": "Fran",
+        "blue": [
+          "Annie",
+          "Grant"
+        ],
+        "blueSpy": "Hugo"
+      },
+      "state": {
+        "roomCode": "AFjkdi",
+        "activeTeamBlue": true,
+        "clueWord": "indigo",
+        "guessesRemaining": 3
+      },
+      "player": {
+        "name": "John",
+        "teamBlue": false,
+        "isSpy": false,
+        "vote": null
+      }
     }
-  ]
+  }
 }
