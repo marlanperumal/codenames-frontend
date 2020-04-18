@@ -1,3 +1,36 @@
+# Codenames Frontend
+
+Frontend for an implementation of the Codenames boardgame
+
+## Dependencies
+
+You must have these installed before running
+
+- [nodejs](https://nodejs.org/en/)
+- [yarn](https://yarnpkg.com/)
+- [json-server](https://github.com/typicode/json-server)
+
+## Quickstart
+
+1. Install packages
+
+    ```bash
+    yarn
+    ```
+
+2. Run the mock db server
+
+    ```bash
+    json-server --watch mockdb.json --port 5000 --routes routes.json
+    ```
+
+3. Run the app
+
+    ```bash
+    yarn start
+    ```
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

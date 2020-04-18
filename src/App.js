@@ -22,6 +22,7 @@ const Row = styled.div`
     justify-content: center;
     align-items: center;
 `
+
 const Card = styled.button`
     display: flex;
     justify-content: center;
