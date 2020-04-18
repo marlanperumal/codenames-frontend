@@ -3,8 +3,8 @@ import axios from "axios"
 import styled from "styled-components"
 
 const teamColors = {
-    blue: "blue",
-    red: "red",
+    blue: "#1d3e6e",
+    red: "#900001",
     neutral: "gray",
     death: "black",
 }
@@ -12,7 +12,7 @@ const teamColors = {
 const Container = styled.div`
     display: flex;
     flex-flow: column nowrap;
-    background-color: lemonchiffon;
+    background-color: #b4b4b4;
     height: 100%;
 `
 
@@ -29,6 +29,8 @@ const Card = styled.button`
     align-items: center;
     margin: 4px;
     padding: 8px;
+    text-transform: uppercase;
+    font-size: 1em;
     font-family: inherit;
     background-color: ${props =>
         props.reveal ? teamColors[props.team] : "#EEEEEE"};
