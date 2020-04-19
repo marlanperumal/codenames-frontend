@@ -9,6 +9,7 @@ You must have these installed before running
 - [nodejs](https://nodejs.org/en/)
 - [yarn](https://yarnpkg.com/)
 - [json-server](https://github.com/typicode/json-server)
+- [codenames-backend](https://github.com/marlanperumal/codenames-backend)
 
 ## Quickstart
 
@@ -18,17 +19,15 @@ You must have these installed before running
     yarn
     ```
 
-2. Run the mock db server
-
-    ```bash
-    yarn db
-    ```
-
-3. Run the app
+2. Run the app
 
     ```bash
     yarn start
     ```
+
+3. Spin up the backend server. Follow the instructions [here](https://github.com/marlanperumal/codenames-backend)
+
+___
 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
