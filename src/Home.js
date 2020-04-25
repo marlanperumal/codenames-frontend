@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
@@ -14,23 +14,54 @@ const Container = styled.div`
 `
 
 const Form = styled.form`
-    margin-top: 20px;
     margin-bottom: 20px;
 `
 
-export default function Home() {
-    const gameIdInput = useRef(null)
+const Input = styled.input`
+    text-transform: uppercase;
+`
+
+const ErrorMessage = styled.div`
+    height: 40px;
+    color: red;
+`
+
+export default function Home({setName}) {
+    const [message, setMessage] = useState()
+    const roomIdInput = useRef(null)
+    const nameInput = useRef(null)
     const history = useHistory()
 
-    function onSubmit(e) {
-        e.preventDefault()
-        history.push(`/${gameIdInput.current.value}`)
-    }
+    useEffect(() => {
+        nameInput.current.focus()
+    }, [])
 
-    async function newGame() {
-        const response = await axios.post("/api/games")
-        const game = response.data
-        history.push(`/${game.id}`)
+    async function onSubmit(e) {
+        e.preventDefault()
+        const name = nameInput.current.value.toUpperCase()
+        const roomId = roomIdInput.current.value.toUpperCase()
+        if (name.length > 0) {
+            setName(name)
+            const request = {}
+            if (roomId.length > 0) {
+                request.method = "get"
+                request.url = `/api/rooms/${roomId}`
+            }
+            else {
+                request.method = "post"
+                request.url = `/api/rooms`
+            }
+            try {
+                const { data } = await axios(request)
+                history.push(data.id)
+            }
+            catch (error) {
+                setMessage(error.response.data.message)
+            }
+        } 
+        else {
+            setMessage("You must enter a Name")
+        }
     }
 
     return (
@@ -38,14 +69,23 @@ export default function Home() {
             <h1>
                 Codenames
             </h1>
-            <Form onSubmit={onSubmit}>
-                <label htmlFor="gameId">
-                    Enter Game Id&nbsp;
+            <Form name="start-form" onSubmit={onSubmit} id="start-form">
+                <label htmlFor="name" maxLength="20">
+                    Name&nbsp;
                 </label>
-                <input type="text" ref={gameIdInput} id="gameId" name="gameId"/>
-                <button type="submit">Go</button>
+                <br/>
+                <Input type="text" ref={nameInput} id="name" name="name"/>
+                <br/>
+                <label htmlFor="roomId" maxLength="6">
+                    Room Code
+                </label>
+                <br/>
+                <Input type="text" ref={roomIdInput} id="roomId" name="roomId"/>
+                <br/>
             </Form>
-            <button onClick={newGame}>New Game</button>
+            <button type="submit" form="start-form">Enter</button>
+            <div> Leave room code empty to start a new room</div>
+            <ErrorMessage>{message}</ErrorMessage>
         </Container>
     )
 }
