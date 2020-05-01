@@ -110,7 +110,20 @@ function Room({ name }) {
     const { roomId } = useParams()
 
     useEffect(() => {
-        socket.emit("join", {room: roomId, name})
+        if (socket.connected) {
+            socket.emit("join", {room: roomId, name, team})
+        }
+        socket.on("connect", () => {
+            socket.emit("join", {room: roomId, name, team})
+        })
+
+        return () => {
+            socket.off("connect")
+            socket.emit("leave", {room: roomId})
+        }
+    }, [roomId])
+
+    useEffect(() => {
         socket.on("message", (msg) => {
             const now = new Date()
             const timeStr = now.toLocaleTimeString()
@@ -125,12 +138,10 @@ function Room({ name }) {
                 return newMessages
             })
         })
-        
         return () => {
             socket.off("message")
-            socket.emit("leave", {room: roomId})
         }
-    }, [roomId, name])
+    })
 
     useEffect(() => {
         function refreshCards(cards) {

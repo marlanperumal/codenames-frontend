@@ -26,15 +26,21 @@ const ErrorMessage = styled.div`
     color: red;
 `
 
-export default function Home({setName}) {
+export default function Home({setName, name}) {
     const [message, setMessage] = useState()
     const roomIdInput = useRef(null)
     const nameInput = useRef(null)
     const history = useHistory()
 
     useEffect(() => {
-        nameInput.current.focus()
-    }, [])
+        if (name !== "PLAYER" && name.length > 0) {
+            nameInput.current.value = name
+            roomIdInput.current.focus()
+        }
+        else {
+            nameInput.current.focus()
+        }
+    }, [name])
 
     async function onSubmit(e) {
         e.preventDefault()

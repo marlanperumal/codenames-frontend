@@ -17,7 +17,7 @@ function App() {
                     <Room name={name}/>
                 </Route>
                 <Route path="/">
-                    <Home setName={setName}/>
+                    <Home setName={setName} name={name}/>
                 </Route>
             </Switch>
         </Router>
