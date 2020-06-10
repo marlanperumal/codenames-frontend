@@ -62,7 +62,6 @@ const Log = styled.div`
 `
 
 const TeamLists = styled.div`
-    height: 50%;
     width: 100%;
     display: flex;
     flex-flow: row nowrap;
