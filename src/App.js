@@ -1,22 +1,23 @@
-import React from "react"
+import React, {useState} from "react"
 import {
     BrowserRouter as Router,
     Switch,
     Route,
 } from "react-router-dom"
 
-import Game from "./Game"
+import Room from "./Room"
 import Home from "./Home"
 
 function App() {
+    const [name, setName] = useState("PLAYER")
     return (
         <Router>
             <Switch>
-                <Route path="/:gameId">
-                    <Game/>
+                <Route path="/:roomId">
+                    <Room name={name}/>
                 </Route>
                 <Route path="/">
-                    <Home/>
+                    <Home setName={setName} name={name}/>
                 </Route>
             </Switch>
         </Router>
