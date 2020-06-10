@@ -12,10 +12,17 @@ const teamColors = {
     DEATH: "black",
 }
 
+const backgroundColors = {
+    BLUE: "lightsteelblue",
+    RED: "indianred",
+    NEUTRAL: "#b4b4b4",
+    DEATH: "black",
+}
+
 const Container = styled.div`
     display: flex;
     flex-flow: row nowrap;
-    background-color: ${props => props.team === "RED" ? "indianRED" : props.team === "BLUE" ? "lightsteelblue" : "#b4b4b4"};
+    background-color: ${props => backgroundColors[props.team]};
     height: 100%;
 `
 
@@ -34,12 +41,13 @@ const TitleBar = styled.div`
 const Board = styled.div`
     display: flex;
     flex-grow: 3;
-    flex-flow: column wrap;
+    flex-flow: column nowrap;
     height: 100%;
 `
 
-const Log = styled.div`
+const RightPanel = styled.div`
     display: flex;
+    flex-flow: column nowrap;
     min-width: 400px;
     padding-top: 10px;
     padding-left: 10px;
@@ -47,6 +55,32 @@ const Log = styled.div`
     flex-flow: column nowrap;
     background-color: white;
     height: 100%;
+`
+
+const Log = styled.div`
+    height: 50%;
+`
+
+const TeamLists = styled.div`
+    height: 50%;
+    width: 100%;
+    display: flex;
+    flex-flow: row nowrap;
+`
+
+const TeamList = styled.div`
+    flex-flow: column nowrap;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+`
+
+const TeamMember = styled.div`
+    margin: 1px;
+    padding: 1px;
+    text-align: center;
+    color: ${props => props.isSpyMaster ? "white" : "black"};
+    background-color: ${props => props.isSpyMaster ? teamColors[props.team] : backgroundColors[props.team]};
 `
 
 const LogItem = styled.div`
@@ -72,7 +106,7 @@ const Card = styled.button`
     font-size: 1em;
     font-family: inherit;
     background-color: ${(props) => (props.revealed || props.selected) ? teamColors[props.team] : "#EEEEEE"};
-    color: ${props => ((!props.selected && props.revealed) ? "white" : "black")};
+    color: ${props => ((props.revealed) ? "white" : "black")};
     border-style: solid;
     border-width: 4px;
     border-color: ${props => props.selected ? "black" : "white"};
@@ -106,22 +140,24 @@ function Room({ name }) {
     const [team, setTeam] = useState("NEUTRAL")
     const [messages, setMessages] = useState([])
     const [cardGrid, setCardGrid] = useState([])
+    const [gameComplete, setGameComplete] = useState(null)
+    const [players, setPlayers] = useState([])
 
     const { roomId } = useParams()
 
     useEffect(() => {
         if (socket.connected) {
-            socket.emit("join", {room: roomId, name, team})
+            socket.emit("join", {room: roomId, name})
         }
         socket.on("connect", () => {
-            socket.emit("join", {room: roomId, name, team})
+            socket.emit("join", {room: roomId, name})
         })
 
         return () => {
             socket.off("connect")
             socket.emit("leave", {room: roomId})
         }
-    }, [roomId])
+    }, [roomId, name])
 
     useEffect(() => {
         socket.on("message", (msg) => {
@@ -130,9 +166,10 @@ function Room({ name }) {
             const message = `[${timeStr}] ${msg}`
             setMessages((messages) => {
                 console.log(message)
+                const logLength = 15
                 let newMessages = [message, ...messages]
-                if (newMessages.length > 20) {
-                    newMessages = newMessages.slice(0, 20)
+                if (newMessages.length > logLength) {
+                    newMessages = newMessages.slice(0, logLength)
                     newMessages.push("...more")
                 }
                 return newMessages
@@ -167,7 +204,10 @@ function Room({ name }) {
     }, [])
 
     useEffect(() => {
-        socket.on("game", (game) => {setGameId(game.id)})
+        socket.on("game", (game) => {
+            setGameId(game.id)
+            setGameComplete(game.complete)
+        })
 
         return () => {socket.off("game")}
     }, [])
@@ -188,9 +228,15 @@ function Room({ name }) {
     }, [])
 
     useEffect(() => {
+        socket.on("players", (players) => {setPlayers(players)})
+
+        return () => {socket.off("players")}
+    }, [])
+
+    useEffect(() => {
         setIsSpyMaster(false)
     }, [gameId, team])
-    
+
     useEffect(() => {
         function updateCard(card) {
             setCards((cards) => ({
@@ -207,6 +253,10 @@ function Room({ name }) {
 
     async function newGame() {
         socket.emit("new-game", {room: roomId})
+    }
+    
+    async function endGame() {
+        socket.emit("end-game", {room: roomId})
     }
     
     async function selectCard(cardId) {
@@ -236,9 +286,10 @@ function Room({ name }) {
                     <Link to="/">
                         <Button>Home</Button>
                     </Link>
-                    <Button onClick={switchSpyMaster}>
+                    <Button onClick={switchSpyMaster} disabled={gameComplete}>
                         {isSpyMaster ? "Become Normal" : "Become SpyMaster"}
                     </Button>
+                    <Button onClick={endGame} disabled={gameComplete}>End Game</Button>
                     <Button onClick={newGame}>New Game</Button>
                 </Row>
                 {cardGrid.map((row, rowId) => (
@@ -249,12 +300,12 @@ function Room({ name }) {
                                 <Card
                                     key={cardId}
                                     team={card.team}
-                                    revealed={isSpyMaster}
+                                    revealed={isSpyMaster || gameComplete}
                                     selected={card.selected}
-                                    disabled={isSpyMaster || card.selected}
+                                    disabled={isSpyMaster || card.selected || gameComplete}
                                     onClick={() => selectCard(cardId)}
                                 >
-                                    {!card.selected && card.word}
+                                    {(!card.selected || gameComplete) && card.word}
                                 </Card>
                             )
                         })}
@@ -287,12 +338,48 @@ function Room({ name }) {
                     </Card>
                 </Row>
             </Board>
-            <Log>
-                <h2>Message Log</h2>
-                {messages.map((msg, i) => (
-                    <LogItem key={i}>{msg}</LogItem>
+            <RightPanel>
+                <Log>
+                    <h2 style={{textAlign: "center"}}>Message Log</h2>
+                    {messages.map((msg, i) => (
+                        <LogItem key={i}>{msg}</LogItem>
+                    ))}
+                </Log>
+                <h2 style={{textAlign: "center"}}>Teams</h2>
+                <TeamLists>
+                    <TeamList>
+                        { players.filter(player => player.current_team === "RED").map((player, i) => (
+                            <TeamMember
+                                key={i}
+                                team="RED"
+                                isSpyMaster={player.is_spymaster}
+                            >
+                                {player.name}
+                            </TeamMember>
+                        ))}
+                    </TeamList>
+                    <TeamList>
+                        { players.filter(player => player.current_team === "BLUE").map((player, i) => (
+                            <TeamMember
+                                key={i}
+                                team="BLUE"
+                                isSpyMaster={player.is_spymaster}
+                            >
+                                {player.name}
+                            </TeamMember>
+                        ))}
+                    </TeamList>
+                </TeamLists>
+                { players.filter(player => player.current_team === "NEUTRAL").map((player, i) => (
+                    <TeamMember
+                        key={i}
+                        team="NEUTRAL"
+                        isSpyMaster={player.is_spymaster}
+                    >
+                        {player.name}
+                    </TeamMember>
                 ))}
-            </Log>
+            </RightPanel>
         </Container>
     )
 }
