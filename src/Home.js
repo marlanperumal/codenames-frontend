@@ -31,6 +31,7 @@ export default function Home({setName, name}) {
     const roomIdInput = useRef(null)
     const nameInput = useRef(null)
     const history = useHistory()
+    const defaultName = name === "PLAYER" ? "" : name
 
     useEffect(() => {
         if (name !== "PLAYER" && name.length > 0) {
@@ -80,7 +81,7 @@ export default function Home({setName, name}) {
                     Name&nbsp;
                 </label>
                 <br/>
-                <Input type="text" ref={nameInput} id="name" name="name"/>
+                <Input type="text" ref={nameInput} id="name" name="name" defaulValue={defaultName}/>
                 <br/>
                 <label htmlFor="roomId" maxLength="6">
                     Room Code

@@ -9,7 +9,13 @@ import Room from "./Room"
 import Home from "./Home"
 
 function App() {
-    const [name, setName] = useState("PLAYER")
+    const [name, setName] = useState(localStorage.getItem("name") || "PLAYER")
+
+    const saveName = (name) => {
+        localStorage.setItem("name", name)
+        setName(name)
+    }
+
     return (
         <Router>
             <Switch>
@@ -17,7 +23,7 @@ function App() {
                     <Room name={name}/>
                 </Route>
                 <Route path="/">
-                    <Home setName={setName} name={name}/>
+                    <Home setName={saveName} name={name}/>
                 </Route>
             </Switch>
         </Router>
