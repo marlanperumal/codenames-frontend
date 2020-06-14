@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import styled from "styled-components"
 import io from "socket.io-client"
+import ButtonWithConfirmation from "./ButtonWithConfirmation"
 
 const socket = io()
 
@@ -122,13 +123,10 @@ const Card = styled.button`
     }
 `
 
-const Button = styled.button`
-    margin: 4px;
-    font-family: inherit;
-    width: 120px;
-    height: 90px;
-    background-color: white;
-`
+const confirmBecomeSpyMaster = "Are you sure you want to become spymaster? This will reveal all the cards to you."
+const confirmBecomeNormal = "Are you sure you want to become a normal player?"
+const confirmEndGame = "Are you sure you want to end the game and reveal all cards?"
+const confirmNewGame = "Are you sure you want to start a new game?"
 
 function arrayToObject(arr, idKey) {
     return arr.reduce((obj, item) => ({ ...obj, [item[idKey]]: item }), {})
@@ -285,13 +283,17 @@ function Room({ name }) {
                 </TitleBar>
                 <Row>
                     <Link to="/">
-                        <Button>Home</Button>
+                        <ButtonWithConfirmation>Home</ButtonWithConfirmation>
                     </Link>
-                    <Button onClick={switchSpyMaster} disabled={gameComplete}>
+                    <ButtonWithConfirmation
+                        onClick={switchSpyMaster}
+                        disabled={gameComplete}
+                        confirmText={isSpyMaster ? confirmBecomeNormal : confirmBecomeSpyMaster}
+                    >
                         {isSpyMaster ? "Become Normal" : "Become SpyMaster"}
-                    </Button>
-                    <Button onClick={endGame} disabled={gameComplete}>End Game</Button>
-                    <Button onClick={newGame}>New Game</Button>
+                    </ButtonWithConfirmation>
+                    <ButtonWithConfirmation onClick={endGame} disabled={gameComplete} confirmText={confirmEndGame}>End Game</ButtonWithConfirmation>
+                    <ButtonWithConfirmation onClick={newGame} confirmText={confirmNewGame}>New Game</ButtonWithConfirmation>
                 </Row>
                 {cardGrid.map((row, rowId) => (
                     <Row key={rowId}>
