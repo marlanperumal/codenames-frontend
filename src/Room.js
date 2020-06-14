@@ -118,7 +118,7 @@ const Card = styled.button`
     &:hover {
         border-color: ${props => (!props.selected && "greenyellow")};
         cursor: pointer;
-        color: ${props => ((!props.revealed && props.selected) ? "#CCC": "inherit")};
+        ${props => ((!props.revealed && props.selected) && "color: #CCC")};
     }
 `
 
