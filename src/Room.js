@@ -105,7 +105,7 @@ const Card = styled.button`
     font-size: 1em;
     font-family: inherit;
     background-color: ${(props) => (props.revealed || props.selected) ? teamColors[props.team] : "#EEEEEE"};
-    color: ${props => ((props.revealed) ? "white" : "black")};
+    color: ${props => ((props.revealed) ? "white" : (props.selected) ? "rgba(0, 0, 0, 0)" : "black")};
     border-style: solid;
     border-width: 4px;
     border-color: ${props => props.selected ? "black" : "white"};
@@ -113,10 +113,12 @@ const Card = styled.button`
     width: 120px;
     height: 90px;
     box-shadow: 4px 4px 3px grey;
+    transition: color ease-in-out 150ms;
 
     &:hover {
         border-color: ${props => (!props.selected && "greenyellow")};
         cursor: pointer;
+        color: ${props => ((!props.revealed && props.selected) ? "#CCC": "inherit")};
     }
 `
 
@@ -304,7 +306,7 @@ function Room({ name }) {
                                     disabled={isSpyMaster || card.selected || gameComplete}
                                     onClick={() => selectCard(cardId)}
                                 >
-                                    {(!card.selected || gameComplete) && card.word}
+                                    {card.word}
                                 </Card>
                             )
                         })}
