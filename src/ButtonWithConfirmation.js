@@ -52,7 +52,7 @@ const PrimaryButton = styled.button`
     background-color: white;
 `
 
-function Button({ onClick, confirmText, children }) {
+function ButtonWithConfirmation({ onClick, confirmText, children }) {
     const [showModal, setShowModal] = useState(false)
 
     const handleClick = useCallback(() => {
@@ -89,4 +89,4 @@ function Button({ onClick, confirmText, children }) {
     )
 }
 
-export default Button
+export default ButtonWithConfirmation

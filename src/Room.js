@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useParams, Link } from "react-router-dom"
 import styled from "styled-components"
 import io from "socket.io-client"
-import Button from "./Button"
+import ButtonWithConfirmation from "./ButtonWithConfirmation"
 
 const socket = io()
 
@@ -281,17 +281,17 @@ function Room({ name }) {
                 </TitleBar>
                 <Row>
                     <Link to="/">
-                        <Button>Home</Button>
+                        <ButtonWithConfirmation>Home</ButtonWithConfirmation>
                     </Link>
-                    <Button
+                    <ButtonWithConfirmation
                         onClick={switchSpyMaster}
                         disabled={gameComplete}
                         confirmText={isSpyMaster ? confirmBecomeNormal : confirmBecomeSpyMaster}
                     >
                         {isSpyMaster ? "Become Normal" : "Become SpyMaster"}
-                    </Button>
-                    <Button onClick={endGame} disabled={gameComplete} confirmText={confirmEndGame}>End Game</Button>
-                    <Button onClick={newGame} confirmText={confirmNewGame}>New Game</Button>
+                    </ButtonWithConfirmation>
+                    <ButtonWithConfirmation onClick={endGame} disabled={gameComplete} confirmText={confirmEndGame}>End Game</ButtonWithConfirmation>
+                    <ButtonWithConfirmation onClick={newGame} confirmText={confirmNewGame}>New Game</ButtonWithConfirmation>
                 </Row>
                 {cardGrid.map((row, rowId) => (
                     <Row key={rowId}>
