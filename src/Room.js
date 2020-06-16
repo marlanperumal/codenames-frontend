@@ -3,22 +3,10 @@ import { useParams, Link } from "react-router-dom"
 import styled from "styled-components"
 import io from "socket.io-client"
 import ButtonWithConfirmation from "./ButtonWithConfirmation"
+import Card from "./Card"
+import { backgroundColors, teamColors } from "./colors"
 
 const socket = io()
-
-const teamColors = {
-    BLUE: "#1d3e6e",
-    RED: "#900001",
-    NEUTRAL: "gray",
-    DEATH: "black",
-}
-
-const backgroundColors = {
-    BLUE: "lightsteelblue",
-    RED: "indianred",
-    NEUTRAL: "#b4b4b4",
-    DEATH: "black",
-}
 
 const Container = styled.div`
     display: flex;
@@ -93,34 +81,6 @@ const Row = styled.div`
     flex-flow: row nowrap;
     justify-content: center;
     align-items: center;
-`
-
-const Card = styled.button`
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center;
-    align-items: center;
-    margin: 4px;
-    padding: 8px;
-    text-transform: uppercase;
-    font-size: 1em;
-    font-family: inherit;
-    background-color: ${(props) => (props.revealed || props.selected) ? teamColors[props.team] : "#EEEEEE"};
-    color: ${props => ((props.revealed) ? "white" : (props.selected) ? "rgba(0, 0, 0, 0)" : "black")};
-    border-style: solid;
-    border-width: 4px;
-    border-color: ${props => props.selected ? "black" : "white"};
-    border-radius: 8px;
-    width: 120px;
-    height: 90px;
-    box-shadow: 4px 4px 3px grey;
-    transition: color ease-in-out 150ms;
-
-    &:hover {
-        border-color: ${props => (!props.selected && "greenyellow")};
-        cursor: pointer;
-        ${props => ((!props.revealed && props.selected) && "color: #CCC")};
-    }
 `
 
 const confirmBecomeSpyMaster = "Are you sure you want to become spymaster? This will reveal all the cards to you."
@@ -303,9 +263,10 @@ function Room({ name }) {
                                 <Card
                                     key={cardId}
                                     team={card.team}
+                                    isSpyMaster={isSpyMaster}
                                     revealed={isSpyMaster || gameComplete}
                                     selected={card.selected}
-                                    disabled={isSpyMaster || card.selected || gameComplete}
+                                    disabled={card.selected || gameComplete}
                                     onClick={() => selectCard(cardId)}
                                 >
                                     {card.word}
