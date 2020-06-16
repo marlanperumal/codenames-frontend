@@ -43,7 +43,7 @@ const PrimaryButton = styled.button`
     margin-bottom: 0.5rem;
 `
 
-function ButtonWithConfirmation({ onClick, confirmText, children }) {
+function ButtonWithConfirmation({ onClick, confirmText, disabled, children }) {
     const [showModal, setShowModal] = useState(false)
 
     const handleClick = useCallback(() => {
@@ -61,7 +61,11 @@ function ButtonWithConfirmation({ onClick, confirmText, children }) {
 
     return (
         <>
-            <PrimaryButton onClick={handleClick} className="button">
+            <PrimaryButton
+                onClick={handleClick}
+                className="button"
+                disabled={disabled}
+            >
                 {children}
             </PrimaryButton>
             {showModal && (
