@@ -124,7 +124,7 @@ const Card = styled.button`
         border-color: ${props => props.selected ? "black" : "white"};
         ${props => ((!props.revealed && props.selected) && "color: #CCC;")}
         ${(props) => (!props.revealed && !props.selected && "background: linear-gradient(45deg, #AAA, white);")}
-        ${(props) => (!props.selected && "transform: rotateX(10deg) rotateY(10deg); box-shadow: -3px 5px 2px rgba(0,0,0,0.5);")}
+        ${(props) => (!(props.selected || props.revealed) && "transform: rotateX(10deg) rotateY(10deg); box-shadow: -3px 5px 2px rgba(0,0,0,0.5);")}
     }
     
 `
