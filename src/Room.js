@@ -55,7 +55,7 @@ const RightPanel = styled.div`
     display: flex;
     flex-flow: column nowrap;    
     min-width: 400px;
-    padding: 12px 24px;
+    padding: 0 24px;
     flex-flow: column nowrap;
     background-color: rgba(0,0,0,0.35);
 `
