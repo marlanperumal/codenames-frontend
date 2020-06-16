@@ -8,7 +8,7 @@ const ModalOverlay = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0.5, 0.5, 0.5, 0.8); 
+    background: rgba(0.5, 0.5, 0.5, 0.8);
 `
 
 const Modal = styled.div`
@@ -61,15 +61,24 @@ function ButtonWithConfirmation({ onClick, confirmText, children }) {
 
     return (
         <>
-            <PrimaryButton onClick={handleClick} className="button">{children}</PrimaryButton>
+            <PrimaryButton onClick={handleClick} className="button">
+                {children}
+            </PrimaryButton>
             {showModal && (
                 <>
-                    <ModalOverlay onClick={() => setShowModal(false)}/>
+                    <ModalOverlay onClick={() => setShowModal(false)} />
                     <Modal>
                         <Text>{confirmText}</Text>
                         <Buttons>
-                            <ModalButton className="button" onClick={handleYes}>Yes</ModalButton>
-                            <ModalButton className="button" onClick={() => setShowModal(false)}>No</ModalButton>
+                            <ModalButton className="button" onClick={handleYes}>
+                                Yes
+                            </ModalButton>
+                            <ModalButton
+                                className="button"
+                                onClick={() => setShowModal(false)}
+                            >
+                                No
+                            </ModalButton>
                         </Buttons>
                     </Modal>
                 </>

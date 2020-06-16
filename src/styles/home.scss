@@ -1,31 +1,31 @@
-@import './base.scss';
+@import "./base.scss";
 
 #home {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  min-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-width: 100vw;
 
-  @include background();
+    @include background();
 
-  h1 {
-    text-align: center;
-    margin: 2rem 0;
-  }
+    h1 {
+        text-align: center;
+        margin: 2rem 0;
+    }
 
-  .error {
-    font-size: 0.875rem;
-    display: block;
-    border: solid 1px darken($danger, 10%);
-    border-radius: $radius;
-    padding: 0.5rem;
-    background-color: change-color($danger, $alpha: 0.15);
-    color: $danger;
-    margin: 1rem 0;
-  }
+    .error {
+        font-size: 0.875rem;
+        display: block;
+        border: solid 1px darken($danger, 10%);
+        border-radius: $radius;
+        padding: 0.5rem;
+        background-color: change-color($danger, $alpha: 0.15);
+        color: $danger;
+        margin: 1rem 0;
+    }
 
-  #login {
-    width: 300px;
-    margin: 0 auto;
-  }
+    #login {
+        width: 300px;
+        margin: 0 auto;
+    }
 }

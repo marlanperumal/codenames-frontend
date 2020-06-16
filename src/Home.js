@@ -6,13 +6,13 @@ import "./styles/home.scss"
 
 const Input = styled.input`
     text-transform: uppercase;
-`;
+`
 
 const Field = styled.div`
     margin-bottom: 1rem;
-`;
+`
 
-export default function Home({setName, name}) {
+export default function Home({ setName, name }) {
     const [message, setMessage] = useState()
     const roomIdInput = useRef(null)
     const nameInput = useRef(null)
@@ -22,8 +22,7 @@ export default function Home({setName, name}) {
         if (name !== "PLAYER" && name.length > 0) {
             nameInput.current.value = name
             roomIdInput.current.focus()
-        }
-        else {
+        } else {
             nameInput.current.focus()
         }
     }, [name])
@@ -38,46 +37,53 @@ export default function Home({setName, name}) {
             if (roomId.length > 0) {
                 request.method = "get"
                 request.url = `/api/rooms/${roomId}`
-            }
-            else {
+            } else {
                 request.method = "post"
                 request.url = `/api/rooms`
             }
             try {
                 const { data } = await axios(request)
                 history.push(data.id)
-            }
-            catch (error) {
+            } catch (error) {
                 setMessage(error.response.data.message)
             }
-        } 
-        else {
+        } else {
             setMessage("You must enter a Name")
         }
     }
 
     return (
         <div id="home">
-            <h1>
-                Codenames
-            </h1>
+            <h1>Codenames</h1>
             <div id="login" className="form">
                 <form name="start-form" onSubmit={onSubmit} id="start-form">
                     <Field>
-                        <label htmlFor="name">
-                            Name
-                        </label>
-                        <Input type="text" ref={nameInput} id="name" name="name" maxLength="20" />
+                        <label htmlFor="name">Name</label>
+                        <Input
+                            type="text"
+                            ref={nameInput}
+                            id="name"
+                            name="name"
+                            maxLength="20"
+                        />
                     </Field>
                     <Field>
-                        <label htmlFor="roomId">
-                            Room Code
-                        </label>
-                        <Input type="text" ref={roomIdInput} id="roomId" name="roomId" maxLength="6" />
-                        <div className="small">Leave this empty to start a new room</div>
+                        <label htmlFor="roomId">Room Code</label>
+                        <Input
+                            type="text"
+                            ref={roomIdInput}
+                            id="roomId"
+                            name="roomId"
+                            maxLength="6"
+                        />
+                        <div className="small">
+                            Leave this empty to start a new room
+                        </div>
                     </Field>
                     {message && <div className="error">{message}</div>}
-                    <button type="submit" className="button" form="start-form">Enter</button>
+                    <button type="submit" className="button" form="start-form">
+                        Enter
+                    </button>
                 </form>
             </div>
         </div>

@@ -6,10 +6,10 @@ Frontend for an implementation of the Codenames boardgame
 
 You must have these installed before running
 
-- [nodejs](https://nodejs.org/en/)
-- [yarn](https://yarnpkg.com/)
-- [json-server](https://github.com/typicode/json-server)
-- [codenames-backend](https://github.com/marlanperumal/codenames-backend)
+-   [nodejs](https://nodejs.org/en/)
+-   [yarn](https://yarnpkg.com/)
+-   [json-server](https://github.com/typicode/json-server)
+-   [codenames-backend](https://github.com/marlanperumal/codenames-backend)
 
 ## Quickstart
 
@@ -27,8 +27,15 @@ You must have these installed before running
 
 3. Spin up the backend server. Follow the instructions [here](https://github.com/marlanperumal/codenames-backend)
 
-___
+4. Run prettier to autoformat all code files changed since the last commit
 
+```
+yarn pretty
+```
+
+This should mostly be unnecessary since the pre-commit hook will take care of any files staged in git on each commit
+
+---
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
