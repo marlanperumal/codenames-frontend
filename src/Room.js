@@ -10,8 +10,8 @@ const socket = io()
 const teamColors = {
     BLUE: "linear-gradient(45deg, #1d2e6e, #1d4e8e)",
     RED: "linear-gradient(45deg, #700, #A00)",
-    NEUTRAL: "#555",
-    DEATH: "black",
+    NEUTRAL: "linear-gradient(45deg, #444, #666)",
+    DEATH: "linear-gradient(45deg, #000, #333)",
 }
 
 const Body = styled.div`
@@ -44,9 +44,9 @@ const Board = styled.div`
     flex-flow: column nowrap;
 `
 const LeftPanel = styled.div`
+    min-width: 200px;
     display: flex;
     flex-flow: column nowrap;
-    
     padding: 12px;
     background-color: rgba(0,0,0,0.35);
 `
@@ -61,7 +61,7 @@ const RightPanel = styled.div`
 `
 
 const Log = styled.div`
-    flex: 1 1 auto
+    flex: 1 1 auto;
 `
 
 const TeamLists = styled.div`
@@ -117,14 +117,14 @@ const Card = styled.button`
     width: 120px;
     height: 90px;
     box-shadow: 4px 4px 3px rgba(0,0,0,0.25);
-    transition: all 0.2s ease-in;
+    transition: all 0.2s ease-out;
     cursor: pointer;
 
     &:hover {
         border-color: ${props => props.selected ? "black" : "white"};
         ${props => ((!props.revealed && props.selected) && "color: #CCC;")}
         ${(props) => (!props.revealed && !props.selected && "background: linear-gradient(45deg, #AAA, white);")}
-        ${(props) => (!props.selected && "transform: rotateX(10deg) rotateY(10deg);")}
+        ${(props) => (!props.selected && "transform: rotateX(10deg) rotateY(10deg); box-shadow: -3px 5px 2px rgba(0,0,0,0.5);")}
     }
     
 `
@@ -311,7 +311,7 @@ function Room({ name }) {
                                         key={cardId}
                                         team={card.team}
                                         playerTeam={team}
-                                        revealed={isSpyMaster || gameComplete}
+                                        revealed={(isSpyMaster && !card.selected) || gameComplete}
                                         selected={card.selected}
                                         disabled={isSpyMaster || card.selected || gameComplete}
                                         onClick={() => selectCard(cardId)}
@@ -363,7 +363,7 @@ function Room({ name }) {
                                         team="RED"
                                         isSpyMaster={player.is_spymaster}
                                     >
-                                        {player.is_spymaster && "🕶️" || "🔍"}
+                                        {player.is_spymaster ? "🕶️" : "🔍"}
                                         {" "}
                                         {player.name}
                                     </TeamMember>
@@ -376,7 +376,7 @@ function Room({ name }) {
                                         team="BLUE"
                                         isSpyMaster={player.is_spymaster}
                                     >
-                                        {player.is_spymaster && "🕶️" || "🔍"}
+                                        {player.is_spymaster ? "🕶️" : "🔍"}
                                         {" "}
                                         {player.name}
                                     </TeamMember>
