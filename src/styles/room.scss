@@ -1,0 +1,15 @@
+@import './base.scss';
+
+#room {
+  min-height: 100vh;
+  min-width: 100vw;
+  @include background($team-neutral);
+
+  &[data-team="RED"] {
+    @include background($team-red);
+  }
+
+  &[data-team="BLUE"] {
+    @include background($team-blue);
+  }
+}

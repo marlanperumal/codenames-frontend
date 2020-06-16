@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 
 const ModalOverlay = styled.div`
@@ -16,25 +16,20 @@ const Modal = styled.div`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #CCC;
-    box-shadow: 2px 2px 20px #333;
-    border-radius: 1em;
-    width: 450px;
+    background: #000;
+    border-radius: 0.5em;
+    width: 400px;
     max-width: 100%;
     z-index: 1100;
-`
-
-const Title = styled.div`
-    padding: 1em 2em 0.5em;
-    font-weight: bold;
+    border: solid 1px #444;
+    padding: 16px;
 `
 
 const Text = styled.div`
-    padding: 1em 2em;
+    margin-bottom: 16px;
 `
 
 const Buttons = styled.div`
-    padding: 1em 2em 2em;
     display: flex;
     justify-content: space-between;
 `
@@ -45,11 +40,7 @@ const ModalButton = styled.button`
 `
 
 const PrimaryButton = styled.button`
-    margin: 4px;
-    font-family: inherit;
-    width: 120px;
-    height: 90px;
-    background-color: white;
+    margin-bottom: 0.5rem;
 `
 
 function ButtonWithConfirmation({ onClick, confirmText, children }) {
@@ -70,17 +61,15 @@ function ButtonWithConfirmation({ onClick, confirmText, children }) {
 
     return (
         <>
-            <PrimaryButton onClick={handleClick}>{children}</PrimaryButton>
+            <PrimaryButton onClick={handleClick} className="button">{children}</PrimaryButton>
             {showModal && (
                 <>
                     <ModalOverlay onClick={() => setShowModal(false)}/>
                     <Modal>
-                        <Title>Are you sure?</Title>
-                        <hr/>
                         <Text>{confirmText}</Text>
                         <Buttons>
-                            <ModalButton onClick={handleYes}>Yes</ModalButton>
-                            <ModalButton onClick={() => setShowModal(false)}>No</ModalButton>
+                            <ModalButton className="button" onClick={handleYes}>Yes</ModalButton>
+                            <ModalButton className="button" onClick={() => setShowModal(false)}>No</ModalButton>
                         </Buttons>
                     </Modal>
                 </>

@@ -1,30 +1,28 @@
 import React, { useState, useEffect } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import io from "socket.io-client"
 import ButtonWithConfirmation from "./ButtonWithConfirmation"
+import "./styles/room.scss"
 
 const socket = io()
 
 const teamColors = {
-    BLUE: "#1d3e6e",
-    RED: "#900001",
-    NEUTRAL: "gray",
-    DEATH: "black",
+    BLUE: "linear-gradient(45deg, #1d2e6e, #1d4e8e)",
+    RED: "linear-gradient(45deg, #700, #A00)",
+    NEUTRAL: "linear-gradient(45deg, #444, #666)",
+    DEATH: "linear-gradient(45deg, #000, #333)",
 }
 
-const backgroundColors = {
-    BLUE: "lightsteelblue",
-    RED: "indianred",
-    NEUTRAL: "#b4b4b4",
-    DEATH: "black",
-}
+const Body = styled.div`
+    display: flex;
+    flex-direction: column;
+`
 
 const Container = styled.div`
     display: flex;
     flex-flow: row nowrap;
-    background-color: ${props => backgroundColors[props.team]};
-    height: 100%;
+    flex-grow: 1;
 `
 
 const TitleBar = styled.div`
@@ -35,35 +33,40 @@ const TitleBar = styled.div`
     justify-content: space-between;
     align-items: center;
     height: 40px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 10px;
+    border-bottom: solid 1px #333;
 `
 
 const Board = styled.div`
+    padding: 24px;
     display: flex;
     flex-grow: 3;
     flex-flow: column nowrap;
-    height: 100%;
+`
+const LeftPanel = styled.div`
+    min-width: 200px;
+    display: flex;
+    flex-flow: column nowrap;
+    padding: 12px;
+    background-color: rgba(0,0,0,0.35);
+    border-right: solid 1px #333;
 `
 
 const RightPanel = styled.div`
     display: flex;
-    flex-flow: column nowrap;
+    flex-flow: column nowrap;    
     min-width: 400px;
-    padding-top: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding: 0 24px;
     flex-flow: column nowrap;
-    background-color: white;
-    height: 100%;
+    background-color: rgba(0,0,0,0.35);
+    border-left: solid 1px #333;
 `
 
 const Log = styled.div`
-    height: 50%;
+    flex: 1 1 auto;
 `
 
 const TeamLists = styled.div`
-    width: 100%;
     display: flex;
     flex-flow: row nowrap;
 `
@@ -76,11 +79,13 @@ const TeamList = styled.div`
 `
 
 const TeamMember = styled.div`
-    margin: 1px;
+    margin: 2px;
     padding: 1px;
     text-align: center;
     color: ${props => props.isSpyMaster ? "white" : "black"};
-    background-color: ${props => props.isSpyMaster ? teamColors[props.team] : backgroundColors[props.team]};
+    background: ${props => teamColors[props.team]};
+    border-radius: 4px;
+    color: #CCC;
 `
 
 const LogItem = styled.div`
@@ -105,28 +110,32 @@ const Card = styled.button`
     text-transform: uppercase;
     font-size: 1em;
     font-family: inherit;
-    background-color: ${(props) => (props.revealed || props.selected) ? teamColors[props.team] : "#EEEEEE"};
+    background: ${(props) => (props.revealed || props.selected) ? teamColors[props.team] : "linear-gradient(45deg, #999, #CCC)"};
     color: ${props => ((props.revealed) ? "white" : (props.selected) ? "rgba(0, 0, 0, 0)" : "black")};
     border-style: solid;
     border-width: 4px;
-    border-color: ${props => props.selected ? "black" : "white"};
+    border-color: ${props => props.selected ? "black" : "#DDD"};
     border-radius: 8px;
     width: 120px;
     height: 90px;
-    box-shadow: 4px 4px 3px grey;
-    transition: color ease-in-out 150ms;
+    box-shadow: 4px 4px 3px rgba(0,0,0,0.25);
+    transition: all 0.2s ease-out;
+    cursor: pointer;
 
     &:hover {
-        border-color: ${props => (!props.selected && "greenyellow")};
-        cursor: pointer;
-        ${props => ((!props.revealed && props.selected) && "color: #CCC")};
+        border-color: ${props => props.selected ? "black" : "white"};
+        ${props => ((!props.revealed && props.selected) && "color: #CCC;")}
+        ${(props) => (!props.revealed && !props.selected && "background: linear-gradient(45deg, #AAA, white);")}
+        ${(props) => (!(props.selected || props.revealed) && "transform: rotateX(10deg) rotateY(10deg); box-shadow: -3px 5px 2px rgba(0,0,0,0.5);")}
     }
+    
 `
 
-const confirmBecomeSpyMaster = "Are you sure you want to become spymaster? This will reveal all the cards to you."
+const confirmBecomeSpyMaster = "Are you sure you want to become the spy master? This will reveal all the cards to you."
 const confirmBecomeNormal = "Are you sure you want to become a normal player?"
 const confirmEndGame = "Are you sure you want to end the game and reveal all cards?"
 const confirmNewGame = "Are you sure you want to start a new game?"
+const confirmNavigateHome = "Are you sure you wish to navigate to the home page?"
 
 function arrayToObject(arr, idKey) {
     return arr.reduce((obj, item) => ({ ...obj, [item[idKey]]: item }), {})
@@ -275,115 +284,126 @@ function Room({ name }) {
     const neutralLeft = Object.keys(cards).filter(cardId => cards[cardId].team === "NEUTRAL" && !cards[cardId].selected).length
 
     return (
-        <Container team={team}>
-            <Board>
-                <TitleBar>
-                    <h4>{name}</h4>
-                    <h4>Room Code: {roomId}</h4>
-                </TitleBar>
-                <Row>
-                    <Link to="/">
-                        <ButtonWithConfirmation>Home</ButtonWithConfirmation>
-                    </Link>
+        <Body id="room" data-team={team}>
+            <TitleBar>
+                <h4>{name}</h4>
+                <h4>Room Code: {roomId}</h4>
+            </TitleBar>
+            <Container team={team}>
+                <LeftPanel>
+                    <ButtonWithConfirmation onClick={() => window.location.href="/"} confirmText={confirmNavigateHome}>Home</ButtonWithConfirmation>
+                    <ButtonWithConfirmation onClick={newGame} confirmText={confirmNewGame}>New Game</ButtonWithConfirmation>
+                    <ButtonWithConfirmation onClick={endGame} disabled={gameComplete} confirmText={confirmEndGame}>End Game</ButtonWithConfirmation>
                     <ButtonWithConfirmation
                         onClick={switchSpyMaster}
                         disabled={gameComplete}
                         confirmText={isSpyMaster ? confirmBecomeNormal : confirmBecomeSpyMaster}
                     >
-                        {isSpyMaster ? "Become Normal" : "Become SpyMaster"}
+                        {isSpyMaster ? "Become Normal" : "Become Spy Master"}
                     </ButtonWithConfirmation>
-                    <ButtonWithConfirmation onClick={endGame} disabled={gameComplete} confirmText={confirmEndGame}>End Game</ButtonWithConfirmation>
-                    <ButtonWithConfirmation onClick={newGame} confirmText={confirmNewGame}>New Game</ButtonWithConfirmation>
-                </Row>
-                {cardGrid.map((row, rowId) => (
-                    <Row key={rowId}>
-                        {row.map(cardId => {
-                            const card = cards[cardId]
-                            return (
-                                <Card
-                                    key={cardId}
-                                    team={card.team}
-                                    revealed={isSpyMaster || gameComplete}
-                                    selected={card.selected}
-                                    disabled={isSpyMaster || card.selected || gameComplete}
-                                    onClick={() => selectCard(cardId)}
-                                >
-                                    {card.word}
-                                </Card>
-                            )
-                        })}
-                    </Row>
-                ))}
-                <Row>
-                    <h3 style={{marginTop: "12px"}}>Cards Left</h3>
-                </Row>
-                <Row>
-                    <Card
-                        onClick={() => switchTeam("RED")}
-                        revealed={true}
-                        team={"RED"}
-                    >
-                        <div>{redLeft}</div>
-                    </Card>
-                    <Card
-                        onClick={() => switchTeam("NEUTRAL")}
-                        revealed={true}
-                        team={"NEUTRAL"}
-                    >
-                        <div>{neutralLeft}</div>
-                    </Card>
-                    <Card
-                        onClick={() => switchTeam("BLUE")}
-                        revealed={true}
-                        team={"BLUE"}
-                    >
-                        <div>{blueLeft}</div>
-                    </Card>
-                </Row>
-            </Board>
-            <RightPanel>
-                <Log>
-                    <h2 style={{textAlign: "center"}}>Message Log</h2>
-                    {messages.map((msg, i) => (
-                        <LogItem key={i}>{msg}</LogItem>
+                </LeftPanel>
+                <Board>
+                    {cardGrid.map((row, rowId) => (
+                        <Row key={rowId}>
+                            {row.map(cardId => {
+                                const card = cards[cardId]
+                                return (
+                                    <Card
+                                        className="card"
+                                        key={cardId}
+                                        team={card.team}
+                                        playerTeam={team}
+                                        revealed={(isSpyMaster && !card.selected) || gameComplete}
+                                        selected={card.selected}
+                                        disabled={isSpyMaster || card.selected || gameComplete}
+                                        onClick={() => selectCard(cardId)}
+                                    >
+                                        {card.word}
+                                    </Card>
+                                )
+                            })}
+                        </Row>
                     ))}
-                </Log>
-                <h2 style={{textAlign: "center"}}>Teams</h2>
-                <TeamLists>
-                    <TeamList>
-                        { players.filter(player => player.current_team === "RED").map((player, i) => (
+                    <Row>
+                        <h3 style={{marginTop: "12px"}}>Cards Left</h3>
+                    </Row>
+                    <Row>
+                        <Card
+                            className="card"
+                            onClick={() => switchTeam("RED")}
+                            revealed={true}
+                            team={"RED"}
+                        >
+                            <div>{redLeft}</div>
+                        </Card>
+                        <Card
+                            className="card"
+                            onClick={() => switchTeam("NEUTRAL")}
+                            revealed={true}
+                            team={"NEUTRAL"}
+                        >
+                            <div>{neutralLeft}</div>
+                        </Card>
+                        <Card
+                            className="card"
+                            onClick={() => switchTeam("BLUE")}
+                            revealed={true}
+                            team={"BLUE"}
+                        >
+                            <div>{blueLeft}</div>
+                        </Card>
+                    </Row>
+                </Board>
+                <RightPanel>
+                    <div style={{ height: '50%', overflow: 'auto' }}>
+                        <h2>Teams</h2>
+                        <TeamLists>
+                            <TeamList>
+                                { players.filter(player => player.current_team === "RED").map((player, i) => (
+                                    <TeamMember
+                                        key={i}
+                                        team="RED"
+                                        isSpyMaster={player.is_spymaster}
+                                    >
+                                        {player.is_spymaster ? "🕶️" : "🔍"}
+                                        {" "}
+                                        {player.name}
+                                    </TeamMember>
+                                ))}
+                            </TeamList>
+                            <TeamList>
+                                { players.filter(player => player.current_team === "BLUE").map((player, i) => (
+                                    <TeamMember
+                                        key={i}
+                                        team="BLUE"
+                                        isSpyMaster={player.is_spymaster}
+                                    >
+                                        {player.is_spymaster ? "🕶️" : "🔍"}
+                                        {" "}
+                                        {player.name}
+                                    </TeamMember>
+                                ))}
+                            </TeamList>
+                        </TeamLists>
+                        { players.filter(player => player.current_team === "NEUTRAL").map((player, i) => (
                             <TeamMember
                                 key={i}
-                                team="RED"
+                                team="NEUTRAL"
                                 isSpyMaster={player.is_spymaster}
                             >
                                 {player.name}
                             </TeamMember>
                         ))}
-                    </TeamList>
-                    <TeamList>
-                        { players.filter(player => player.current_team === "BLUE").map((player, i) => (
-                            <TeamMember
-                                key={i}
-                                team="BLUE"
-                                isSpyMaster={player.is_spymaster}
-                            >
-                                {player.name}
-                            </TeamMember>
+                    </div>
+                    <Log>
+                        <h2>Log</h2>
+                        {messages.map((msg, i) => (
+                            <LogItem key={i}>{msg}</LogItem>
                         ))}
-                    </TeamList>
-                </TeamLists>
-                { players.filter(player => player.current_team === "NEUTRAL").map((player, i) => (
-                    <TeamMember
-                        key={i}
-                        team="NEUTRAL"
-                        isSpyMaster={player.is_spymaster}
-                    >
-                        {player.name}
-                    </TeamMember>
-                ))}
-            </RightPanel>
-        </Container>
+                    </Log>
+                </RightPanel>
+            </Container>
+        </Body>
     )
 }
 
