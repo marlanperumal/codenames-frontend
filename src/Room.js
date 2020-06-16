@@ -49,6 +49,7 @@ const LeftPanel = styled.div`
     flex-flow: column nowrap;
     padding: 12px;
     background-color: rgba(0,0,0,0.35);
+    border-right: solid 1px #333;
 `
 
 const RightPanel = styled.div`
@@ -58,6 +59,7 @@ const RightPanel = styled.div`
     padding: 0 24px;
     flex-flow: column nowrap;
     background-color: rgba(0,0,0,0.35);
+    border-left: solid 1px #333;
 `
 
 const Log = styled.div`
