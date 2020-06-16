@@ -4,6 +4,7 @@ import styled from "styled-components"
 import socket from "./socket"
 import GameMenu from "./GameMenu"
 import GameBoard from "./GameBoard"
+import TeamStatus from "./TeamStatus"
 import Teams from "./Teams"
 import Log from "./Log"
 import "./styles/room.scss"
@@ -46,7 +47,6 @@ const RightPanel = styled.div`
     flex-flow: column nowrap;
     min-width: 400px;
     padding: 0 24px;
-    flex-flow: column nowrap;
     background-color: rgba(0, 0, 0, 0.35);
     border-left: solid 1px #333;
 `
@@ -54,6 +54,7 @@ const RightPanel = styled.div`
 const MiddlePanel = styled.div`
     display: flex;
     flex-flow: column nowrap;
+    align-items: center;
 `
 
 function Room({ name }) {
@@ -61,6 +62,11 @@ function Room({ name }) {
     const [isSpyMaster, setIsSpyMaster] = useState(false)
     const [team, setTeam] = useState("NEUTRAL")
     const [gameComplete, setGameComplete] = useState(null)
+    const [teamStatus, setTeamStatus] = useState({
+        RED: 0,
+        BLUE: 0,
+        NEUTRAL: 0,
+    })
     const { roomId } = useParams()
 
     useEffect(() => {
@@ -130,8 +136,9 @@ function Room({ name }) {
                     <GameBoard
                         isSpyMaster={isSpyMaster}
                         gameComplete={gameComplete}
-                        team={team}
+                        setTeamStatus={setTeamStatus}
                     />
+                    <TeamStatus teamStatus={teamStatus} />
                 </MiddlePanel>
                 <RightPanel>
                     <Teams />

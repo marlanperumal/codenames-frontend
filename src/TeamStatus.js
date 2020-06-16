@@ -31,10 +31,10 @@ const Row = styled.div`
     align-items: center;
 `
 
-function TeamCard({ team, cards, switchTeam }) {
-    const cardsLeft = Object.keys(cards).filter(
-        cardId => cards[cardId].team === team && !cards[cardId].selected,
-    ).length
+function TeamCard({ team, cardsLeft }) {
+    async function switchTeam(team) {
+        socket.emit("switch-team", { team: team })
+    }
 
     return (
         <StyledTeamCard
@@ -47,22 +47,18 @@ function TeamCard({ team, cards, switchTeam }) {
     )
 }
 
-function TeamStatus({ roomId, cards }) {
-    async function switchTeam(team) {
-        socket.emit("switch-team", { room: roomId, team: team })
-    }
-
+function TeamStatus({ teamStatus }) {
     return (
         <>
             <h3 style={{ marginTop: "12px" }}>Cards Left</h3>
             <Row>
-                <TeamCard team="RED" cards={cards} switchTeam={switchTeam} />
-                <TeamCard
-                    team="NEUTRAL"
-                    cards={cards}
-                    switchTeam={switchTeam}
-                />
-                <TeamCard team="BLUE" cards={cards} switchTeam={switchTeam} />
+                {Object.keys(teamStatus).map(team => (
+                    <TeamCard
+                        team={team}
+                        cardsLeft={teamStatus[team]}
+                        key={team}
+                    />
+                ))}
             </Row>
         </>
     )

@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react"
 import styled from "styled-components"
 import socket from "./socket"
 import { teamColors } from "./config"
-import TeamStatus from "./TeamStatus"
 
 const StyledGameBoard = styled.div`
     padding: 24px;
     display: flex;
-    flex-grow: 3;
     flex-flow: column nowrap;
     align-items: center;
 `
@@ -69,7 +67,13 @@ function arrayToObject(arr, idKey) {
     return arr.reduce((obj, item) => ({ ...obj, [item[idKey]]: item }), {})
 }
 
-function GameBoard({ roomId, isSpyMaster, gameComplete, team }) {
+function cardsLeft(cards, team) {
+    return Object.keys(cards).filter(
+        cardId => cards[cardId].team === team && !cards[cardId].selected,
+    ).length
+}
+
+function GameBoard({ isSpyMaster, gameComplete, setTeamStatus }) {
     const [cards, setCards] = useState({})
     const [cardGrid, setCardGrid] = useState([])
 
@@ -86,9 +90,15 @@ function GameBoard({ roomId, isSpyMaster, gameComplete, team }) {
                         .map(item => item.id),
                 )
             }
+
             setCardGrid([])
             setCards(newCards)
             setCardGrid(newCardGrid)
+            setTeamStatus({
+                RED: cardsLeft(newCards, "RED"),
+                BLUE: cardsLeft(newCards, "BLUE"),
+                NEUTRAL: cardsLeft(newCards, "NEUTRAL"),
+            })
         }
 
         socket.on("cards", cards => {
@@ -98,7 +108,7 @@ function GameBoard({ roomId, isSpyMaster, gameComplete, team }) {
         return () => {
             socket.off("cards")
         }
-    }, [])
+    }, [setTeamStatus])
 
     async function selectCard(cardId) {
         socket.emit("select-card", { card: cardId })
@@ -149,7 +159,6 @@ function GameBoard({ roomId, isSpyMaster, gameComplete, team }) {
                     })}
                 </Row>
             ))}
-            <TeamStatus roomId={roomId} cards={cards} />
         </StyledGameBoard>
     )
 }
