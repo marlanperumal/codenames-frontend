@@ -96,8 +96,8 @@ function GameBoard({ isSpyMaster, gameComplete, setTeamStatus }) {
             setCardGrid(newCardGrid)
             setTeamStatus({
                 RED: cardsLeft(newCards, "RED"),
-                BLUE: cardsLeft(newCards, "BLUE"),
                 NEUTRAL: cardsLeft(newCards, "NEUTRAL"),
+                BLUE: cardsLeft(newCards, "BLUE"),
             })
         }
 
