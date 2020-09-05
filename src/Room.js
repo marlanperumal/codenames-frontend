@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import socket from "./socket"
+import { flags } from "./config"
 import GameMenu from "./GameMenu"
 import GameBoard from "./GameBoard"
 import TeamStatus from "./TeamStatus"
@@ -21,7 +22,7 @@ const Container = styled.div`
     justify-content: space-between;
 `
 
-const TitleBar = styled.div`
+const TitleBar = styled.nav`
     background-color: black;
     color: white;
     display: flex;
@@ -57,8 +58,20 @@ const MiddlePanel = styled.div`
     align-items: center;
 `
 
-function Room({ name }) {
+const RoomInfo = styled.h4`
+    display: flex;
+`
+
+const Flag = styled.img`
+    align-self: center;
+    margin-left: 8px;
+    margin-right: 8px;
+    border: 1px solid white;
+`
+
+function Room({ name, language }) {
     const [gameId, setGameId] = useState(null)
+    const [gameLanguage, setGameLanguage] = useState(null)
     const [isSpyMaster, setIsSpyMaster] = useState(false)
     const [team, setTeam] = useState("NEUTRAL")
     const [gameComplete, setGameComplete] = useState(null)
@@ -87,6 +100,7 @@ function Room({ name }) {
         socket.on("game", game => {
             setGameId(game.id)
             setGameComplete(game.complete)
+            setGameLanguage(game.language_id)
         })
 
         return () => {
@@ -123,7 +137,11 @@ function Room({ name }) {
         <Body id="room" data-team={team}>
             <TitleBar>
                 <h4>{name}</h4>
-                <h4>Room Code: {roomId}</h4>
+                <RoomInfo>
+                    Room Code: {roomId}
+                    <Flag src={flags[gameLanguage]} alt={language} />
+                    {gameLanguage}
+                </RoomInfo>
             </TitleBar>
             <Container team={team}>
                 <LeftPanel>

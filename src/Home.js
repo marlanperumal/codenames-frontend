@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 import axios from "axios"
 import "./styles/home.scss"
+import { flags } from "./config"
 
 const Input = styled.input`
     text-transform: uppercase;
@@ -12,11 +13,41 @@ const Field = styled.div`
     margin-bottom: 1rem;
 `
 
-export default function Home({ setName, name }) {
+const SubmitRow = styled.div`
+    display: flex;
+    justify-content: space-between;
+`
+
+const LanguageSelector = styled.div`
+    display: flex;
+    justify-content: flex-end;
+`
+
+const Flag = styled.img`
+    align-self: center;
+    margin-right: 8px;
+`
+
+export default function Home({ name, setName, language, setLanguage }) {
     const [message, setMessage] = useState()
+    const [languages, setLanguages] = useState([{ id: language }])
     const roomIdInput = useRef(null)
     const nameInput = useRef(null)
+    const languageSelector = useRef(null)
     const history = useHistory()
+
+    useEffect(() => {
+        async function getLanguages() {
+            const request = {
+                method: "get",
+                url: "/api/languages",
+            }
+            const { data } = await axios(request)
+            setLanguages(data)
+            languageSelector.current.value = language
+        }
+        getLanguages()
+    }, [language])
 
     useEffect(() => {
         if (name !== "PLAYER" && name.length > 0) {
@@ -39,7 +70,10 @@ export default function Home({ setName, name }) {
                 request.url = `/api/rooms/${roomId}`
             } else {
                 request.method = "post"
-                request.url = `/api/rooms`
+                request.url = "/api/rooms"
+                request.data = {
+                    language_id: languageSelector.current.value,
+                }
             }
             try {
                 const { data } = await axios(request)
@@ -50,6 +84,10 @@ export default function Home({ setName, name }) {
         } else {
             setMessage("You must enter a Name")
         }
+    }
+
+    const switchLanguage = () => {
+        setLanguage(languageSelector.current.value)
     }
 
     return (
@@ -81,9 +119,26 @@ export default function Home({ setName, name }) {
                         </div>
                     </Field>
                     {message && <div className="error">{message}</div>}
-                    <button type="submit" className="button" form="start-form">
-                        Enter
-                    </button>
+                    <SubmitRow>
+                        <button
+                            type="submit"
+                            className="button"
+                            form="start-form"
+                        >
+                            Enter
+                        </button>
+                        <LanguageSelector>
+                            <Flag src={flags[language]} alt={language} />
+                            <select
+                                ref={languageSelector}
+                                onChange={switchLanguage}
+                            >
+                                {languages.map(lang => (
+                                    <option value={lang.id}>{lang.id}</option>
+                                ))}
+                            </select>
+                        </LanguageSelector>
+                    </SubmitRow>
                 </form>
             </div>
         </div>
